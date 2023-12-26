@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <h1>No server messaging</h1>
+    <input id="text" placeholder="message content">
+    <button onclick="sendMessage()">Send</button>
+    <ul id="list"></ul>
+    <ul id="my-messages"></ul>
+<body>
+    <script>
+        // Connection to a broadcast channel
+        const bc = new BroadcastChannel("test_channel");
+        let messages = []
+        let myMessages = []
+        // Example of sending of a very simple message
+        
+        // A handler that only logs the event to the console:
+        bc.onmessage = (event) => {
+            console.log(event)
+            messages.push(event.data);
+            let htmlContent = ''
+            for (let i = 0; i < messages.length; i++) {
+                htmlContent += `<li>${messages[i]}</li>`
+            }
+            document.getElementById('list').innerHTML = htmlContent
+        };
+
+        function sendMessage() {
+            let messageVal = document.getElementById('text').value
+            myMessages.push(messageVal)
+            let htmlContent = ''
+            for (let i = 0; i < myMessages.length; i++) {
+                htmlContent += `<li>${myMessages[i]}</li>`
+            }
+            document.getElementById('my-messages').innerHTML = htmlContent
+            bc.postMessage(messageVal);
+        }
+    </script>
+</body>
+
+</html>
